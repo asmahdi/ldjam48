@@ -35,9 +35,13 @@ public class GameManager : MonoBehaviour
     public Vector3 targetPosition;
 
     [Header("Repair Setting")]
-    public GameObject[] cracks;
+    public GameObject repairObj;
+    public GameObject crack;
     public GameObject[] patches;
- 
+
+    [Header("Audios")]
+    public GameObject moveAudio;
+    public GameObject lookAudio;
 
 
 
@@ -45,6 +49,10 @@ public class GameManager : MonoBehaviour
     private Vector3 targetA_Position;
     private Vector3 mapDimention = new Vector3(360,500,100);
     private float fuelAmount, oxygenAmount, foodAmount;
+    private float repairCount;
+
+    private Vector3 crackPos;
+    private GameObject crackObj;
 
     private bool captured;
 
@@ -65,8 +73,10 @@ public class GameManager : MonoBehaviour
         WriteNote();
 
 
-
-        InvokeRepeating("NeedRepair", 10f, 20f);
+        
+         InvokeRepeating("NeedRepair", 2f, 20f);
+        
+        
     }
 
     private void Update()
@@ -79,6 +89,11 @@ public class GameManager : MonoBehaviour
         if (CheckIfLevelEnd())
         {
             endLevel.SetActive(true);
+        }
+
+        if (repairCount > 2)
+        {
+            CancelInvoke("NeedRepair");
         }
 
         
@@ -99,6 +114,16 @@ public class GameManager : MonoBehaviour
         periscopeMap.transform.Translate(-lookSpeed * Mathf.Pow(horizontalControl.value,3) * Time.deltaTime, 0, 0);
 
         lookAngle.text = (periscopeMap.transform.position.x ).ToString("F1");
+
+        if (horizontalControl.value != 0)
+        {
+            lookAudio.SetActive(true);
+            lookAudio.GetComponent<AudioSource>().pitch = Mathf.Abs(horizontalControl.value)/2;
+        }
+        else
+        {
+            lookAudio.SetActive(false);
+        }
     }
 
     public void MoveVerically()
@@ -107,13 +132,25 @@ public class GameManager : MonoBehaviour
         {
             periscopeMap.transform.Translate(0, -verticalControl.value * divingSpeed * Time.deltaTime, 0);
             depth.text = (periscopeMap.transform.position.y).ToString("F1");
+
+            
         }
 
         if ( periscopeMap.transform.position.y < 0 )
         {
             periscopeMap.transform.Translate(0, 1f, 0);
+
+           
         }
 
+        if (verticalControl.value != 0)
+        {
+            moveAudio.SetActive(true);
+        }
+        else
+        {
+            moveAudio.SetActive(false);
+        }
         
     }
 
@@ -140,7 +177,7 @@ public class GameManager : MonoBehaviour
     {
         float distance;
         distance =  Mathf.Abs(target.transform.position.y);
-        print(Vector3.Distance(Vector3.zero, target.transform.position));
+        //print(Vector3.Distance(Vector3.zero, target.transform.position));
 
         
 
@@ -245,18 +282,21 @@ public class GameManager : MonoBehaviour
 
 
 
-    private void DistributeCracks()
+    private void NeedRepair()
     {
-        foreach (GameObject crack in cracks)
-        {
-            crack.transform.position = new Vector3(Random.Range(-6, 6), Random.Range(-3, 3), 0);
-        }
+        repairObj.SetActive(true);
+
+        crackPos = new Vector3(Random.Range(-6, 6), Random.Range(-3, 3), 0);
+
+        crackObj = Instantiate(crack,crackPos,Quaternion.identity,repairObj.transform);
+
+        repairCount++;
     }
 
 
     private bool CheckIfLevelEnd()
     {
-        if (captured && periscopeMap.transform.position.y > 3)
+        if (captured && periscopeMap.transform.position.y < 3)
         {
             return true;
         }
@@ -264,6 +304,23 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+
+    public void CheckRepair()
+    {
+
+        foreach (GameObject p in patches)
+        {
+            if (Vector3.Distance(p.transform.position, crackPos) < .5f)
+            {
+                Destroy(crackObj);
+                p.SetActive(false);
+                repairObj.SetActive(false);
+
+            }
+        }
+        
     }
     
 

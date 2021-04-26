@@ -858,8 +858,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: This is the note provided to you by the authority. This will help to find
-    the probe.
+  m_text: This is the note provided by the authority. This will help to find the
+    probe.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
   m_sharedMaterial: {fileID: -7236220908939568191, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
@@ -1010,6 +1010,7 @@ MonoBehaviour:
   - {fileID: 1250560012}
   - {fileID: 1521652140}
   - {fileID: 564323376}
+  click: {fileID: 899295616}
 --- !u!4 &895678305
 Transform:
   m_ObjectHideFlags: 0
@@ -1064,7 +1065,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6749e91c119927942a8590e5aba27597, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 02dff5363f4058b4aa3d138985de2fff, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.538
   m_Pitch: 1
@@ -1391,7 +1392,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Those patches will be useful if any damage happens to your ship.
+  m_text: Grab and use those patches to cover up the cracks in the ship.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
   m_sharedMaterial: {fileID: -7236220908939568191, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
@@ -1765,8 +1766,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: These two are the indecator of you two important resources. Finish you
-    work  before time.
+  m_text: These two are the indicator of your two important resources. Finish you
+    work before time.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
   m_sharedMaterial: {fileID: -7236220908939568191, guid: 5775b32da61bdd64295f4e017cb6a690, type: 2}
@@ -2294,8 +2295,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984281960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.1326, y: -4.1934, z: 0}
-  m_LocalScale: {x: 3.9121835, y: 3.3956168, z: 1}
+  m_LocalPosition: {x: -0.4114, y: -4.4523, z: 0}
+  m_LocalScale: {x: 4.1911225, y: 3.6543627, z: 1}
   m_Children: []
   m_Father: {fileID: 1250560013}
   m_RootOrder: 0

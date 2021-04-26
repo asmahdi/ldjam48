@@ -7,13 +7,15 @@ using UnityEngine;
 public class TutorialController : MonoBehaviour
 {
     public GameObject[] tutorials;
+    public AudioSource click;
     private int count;
     private void OnMouseUp()
     {
-        print("test");
+        
         if (Input.GetMouseButtonUp(0))
         {
             NextTutorial();
+            click.Play();
         }
     }
 
@@ -21,7 +23,7 @@ public class TutorialController : MonoBehaviour
     {
         if (count > 6)
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Menu");
             return;
         }
         

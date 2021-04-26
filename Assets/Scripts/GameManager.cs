@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,12 +28,15 @@ public class GameManager : MonoBehaviour
     public SpriteRenderer oxygen, food;
     public float maxOffset;
     public GameObject endLevel;
+    public GameObject gameFailed;
 
     [Header("Level Settings")]
     public float fuelUseRate;
     public float oxygenUseRate;
     public float foodUseRate;
     public Vector3 targetPosition;
+    public string level;
+    
 
     [Header("Repair Setting")]
     public GameObject repairObj;
@@ -74,7 +78,7 @@ public class GameManager : MonoBehaviour
 
 
         
-         InvokeRepeating("NeedRepair", 2f, 20f);
+         InvokeRepeating("NeedRepair", 30f, 50f);
         
         
     }
@@ -91,10 +95,17 @@ public class GameManager : MonoBehaviour
             endLevel.SetActive(true);
         }
 
-        if (repairCount > 2)
+        if (repairCount > 5)
         {
             CancelInvoke("NeedRepair");
         }
+
+
+        if (fuelAmount < 0.1f || oxygenAmount < 0.1f)
+        {
+            gameFailed.SetActive(true);
+        }
+        
 
         
     }
@@ -175,6 +186,11 @@ public class GameManager : MonoBehaviour
 
     private void ControlPing()
     {
+        if (captured)
+        {
+            return;
+        }
+
         float distance;
         distance =  Mathf.Abs(target.transform.position.y);
         //print(Vector3.Distance(Vector3.zero, target.transform.position));
@@ -211,7 +227,7 @@ public class GameManager : MonoBehaviour
             pingAudios[3].SetActive(false);
 
         }
-        else if (distance > 4)
+        else if (distance > 2)
         {
             pingRadar.SetFloat("ping_speed", 3);
 
@@ -231,8 +247,11 @@ public class GameManager : MonoBehaviour
 
     private void DecreaseResources()
     {
-        fuelAmount -= fuelUseRate/1000 * Time.deltaTime;
-        fuel.size = new Vector2(fuel.size.x, Mathf.Lerp(0, maxOffset, fuelAmount));
+        if (verticalControl.value != 0)
+        {
+            fuelAmount -= fuelUseRate / 1000 * Time.deltaTime;
+            fuel.size = new Vector2(fuel.size.x, Mathf.Lerp(0, maxOffset, fuelAmount));
+        }
 
         oxygenAmount -= oxygenUseRate/1000 * Time.deltaTime;
         oxygen.size = new Vector2(fuel.size.x, Mathf.Lerp(0, maxOffset, oxygenAmount));
@@ -246,14 +265,14 @@ public class GameManager : MonoBehaviour
     public void WriteNote()
     {
         float startAngle, endAngle;
-        startAngle = targetPosition.x - 50;
-        endAngle = targetPosition.x + 50;
+        startAngle = targetPosition.x - 10;
+        endAngle = targetPosition.x + 10;
 
         startAngle = CorrectAngle(startAngle);
         endAngle = CorrectAngle(endAngle);
 
         noteAngleText.text = startAngle.ToString() + " to "+ endAngle.ToString() + "DEGREE";
-        noteDepthText.text = (targetPosition.y - 70).ToString() + " to " + (targetPosition.y + 70).ToString() + "M";
+        noteDepthText.text = (targetPosition.y - 5).ToString() + " to " + (targetPosition.y + 5).ToString() + "M";
 
     }
 
@@ -278,6 +297,13 @@ public class GameManager : MonoBehaviour
     {
         target.transform.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
         captureText.SetActive(true);
+
+        pingRadar.SetFloat("ping_speed", 0);
+
+        foreach (GameObject pa in pingAudios)
+        {
+            pa.SetActive(false);
+        }
     }
 
 
@@ -286,7 +312,7 @@ public class GameManager : MonoBehaviour
     {
         repairObj.SetActive(true);
 
-        crackPos = new Vector3(Random.Range(-6, 6), Random.Range(-3, 3), 0);
+        crackPos = new Vector3(Random.Range(-4, 4), Random.Range(-2, 2), 0);
 
         crackObj = Instantiate(crack,crackPos,Quaternion.identity,repairObj.transform);
 
@@ -298,7 +324,9 @@ public class GameManager : MonoBehaviour
     {
         if (captured && periscopeMap.transform.position.y < 3)
         {
+            PlayerPrefs.SetInt(level, 1);
             return true;
+            
         }
         else
         {
@@ -321,6 +349,16 @@ public class GameManager : MonoBehaviour
             }
         }
         
+    }
+
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void ExitToLevel()
+    {
+        SceneManager.LoadScene("LevelList");
     }
     
 
